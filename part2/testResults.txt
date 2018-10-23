@@ -1,0 +1,120 @@
+// Jonathan Dang and Clay Oshiro-Leavitt
+// WPI Username: jdang and coshiroleavitt
+
+
+Tests the case if a NULL was put in as a parameter for syscall2:
+
+jdang@jdang-VirtualBox:~/proj2/part2$ ./testNull
+
+The return values of the system calls are:
+cs3013_syscall1: 0
+cs3013_syscall2(NULL): -1
+cs3013_syscall3: 0
+
+--------------------------------------------------------------------------------------------------------------------
+Tests with no children and no siblings
+
+jdang@jdang-VirtualBox:~/proj2/part2$ ./testNoList 
+The return values of putting NULL into cs3013_syscall2:
+
+UID is 1000
+PID is 13511
+Parent PID is 4090
+Yougest Child PID is -1
+Younger Sibling PID is -1
+Older Sibling PID is 0
+State is 0
+Start time is 7144377773046
+System time is 0
+User time is 0
+Child User time is 0
+Child system time is 0
+
+cs3013_syscall2: 0
+
+--------------------------------------------------------------------------------------------------------------------
+Tests with children and no siblings
+
+jdang@jdang-VirtualBox:~/proj2/part2$ ./testCalls
+
+Process Info of Current Process:
+State: 0
+PID: 13497
+Parent PID: 4090
+Yougest Child PID: 13499
+Younger Sibling PID: -1
+Older Sibling PID: 0
+UID: 1000
+Start time: 7059485506912
+CPU time in User Mode: 0
+CPU time in System Mode: 0
+User time of Children: 16000
+System time of Children: 0
+
+cs3013_syscall2 returned: 0
+
+--------------------------------------------------------------------------------------------------------------------
+Tests with children and siblings
+
+jdang@jdang-VirtualBox:~/proj2/part2$ sleep 1 & ./testCalls & sleep 2 & sleep 3 & 
+[1] 13528
+[2] 13529
+[3] 13530
+[4] 13531
+
+jdang@jdang-VirtualBox:~/proj2/part2$ 
+Process Info of Current Process:
+State: 0
+PID: 13529
+Parent PID: 4090
+Yougest Child PID: 13533
+Younger Sibling PID: 13530
+Older Sibling PID: 13528
+UID: 1000
+Start time: 7246047477006
+CPU time in User Mode: 0
+CPU time in System Mode: 0
+User time of Children: 4000
+System time of Children: 0
+
+cs3013_syscall2 returned: 0
+
+--------------------------------------------------------------------------------------------------------------------
+
+After running the program multiple of times on multiple shells, there are observed variations with each execution.
+For example, when running with no child or sibling processes, the returned PIDs for the relevant fields are -1. Then,
+depending on the number of forks, the PIDs will change.
+Similarly, CPU time varies based on the current process being executed, as well as the actual performance of the CPU.
+These times are not consistent from run to run. 
+
+
+
+
+
+jdang@jdang-VirtualBox:~/proj2/part1$ ./testOpenClose
+The return values of the system calls are:
+cs3013_syscall1: 0
+
+Testing Opening Call and Closing Call:
+User 1000 is opening file: test.txt
+User 1000 is closing file descriptor: 3
+
+User 1000 is opening file: syscalls.h
+User 1000 is closing file descriptor: 3
+
+cs3013_syscall2: 0
+cs3013_syscall3: 0
+
+
+A selected excerpt from /var/log/syslog
+
+Sep 13 19:21:01 jdang-VirtualBox kernel: [12361.420936] User 1000 is closing file descriptor: 3
+Sep 13 19:21:01 jdang-VirtualBox kernel: [12361.421489] "'Hello world?!' More like 'Goodbye, world!' EXTERMINATE!" -- Dalek
+Sep 13 19:21:01 jdang-VirtualBox kernel: [12361.421557] User 1000 is opening file: test.txt
+Sep 13 19:21:01 jdang-VirtualBox kernel: [12361.421582] User 1000 is closing file descriptor: 3
+Sep 13 19:21:01 jdang-VirtualBox kernel: [12361.421598] User 1000 is opening file: syscalls.h
+Sep 13 19:21:01 jdang-VirtualBox kernel: [12361.421611] User 1000 is closing file descriptor: 3
+Sep 13 19:21:01 jdang-VirtualBox kernel: [12361.421625] 'Hello, World!' --syscall2
+Sep 13 19:21:02 jdang-VirtualBox kernel: [12361.494941] User 1000 is closing file descriptor: -1
+Sep 13 19:21:02 jdang-VirtualBox kernel: [12361.496125] User 1000 is closing file descriptor: -1
+

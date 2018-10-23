@@ -1,0 +1,1 @@
+cmd_/home/jdang/proj2/part1/part1.ko := ld -r -m elf_i386 -T ./scripts/module-common.lds --build-id  -o /home/jdang/proj2/part1/part1.ko /home/jdang/proj2/part1/part1.o /home/jdang/proj2/part1/part1.mod.o
